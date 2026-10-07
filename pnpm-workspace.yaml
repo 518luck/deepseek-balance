@@ -1,0 +1,6 @@
+# pnpm 12 起，包管理设置从 package.json 的 "pnpm" 字段迁移到这里。
+# esbuild（Vite 的打包器）与 workerd（wrangler 本地运行时）需要执行安装脚本来准备二进制，
+# 显式放行这两个；其余依赖的安装脚本一律不执行。
+allowBuilds:
+  esbuild: true
+  workerd: true

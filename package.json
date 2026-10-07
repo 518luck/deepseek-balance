@@ -1,0 +1,34 @@
+{
+  "name": "deepseek-balance",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "输入 DeepSeek API Key，查询账户余额 —— Three.js 3D 风景 + 磨砂玻璃终端 + 流式自然语言播报",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --port 4173",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "cf:dev": "pnpm build && wrangler dev",
+    "deploy": "pnpm build && wrangler deploy",
+    "cf:whoami": "wrangler whoami"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.147.0"
+  }
+}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1533" />
+      <stop offset="0.62" stop-color="#3b2a63" />
+      <stop offset="1" stop-color="#f0a06a" />
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.08" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#sky)" />
+  <circle cx="42" cy="38" r="7" fill="#ffd9a8" opacity="0.95" />
+  <path d="M0 44 L14 32 L26 43 L38 30 L52 45 L64 38 L64 64 L0 64 Z" fill="#141a3a" opacity="0.92" />
+  <rect x="12" y="16" width="40" height="26" rx="7" fill="url(#glass)" stroke="#ffffff" stroke-opacity="0.45" />
+  <path d="M19 25 L24 29.5 L19 34" fill="none" stroke="#eef2ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M28 34 L38 34" fill="none" stroke="#eef2ff" stroke-width="2.4" stroke-linecap="round" opacity="0.85" />
+</svg>

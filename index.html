@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>DeepSeek 余额查询 · 一眼看清账户还剩多少</title>
+    <meta
+      name="description"
+      content="输入 DeepSeek API Key，直接在浏览器里查询账户余额，并把结果翻译成好懂的人话。密钥不上传服务器，随开随用。"
+    />
+    <meta name="theme-color" content="#0a0d1a" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="DeepSeek 余额查询 · 一眼看清账户还剩多少" />
+    <meta
+      property="og:description"
+      content="Three.js 3D 风景 + 磨砂玻璃终端：输入 API Key，流式播报你的 DeepSeek 账户余额。"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- 直连查询：提前建连，省掉一次 TLS 往返 -->
+    <link rel="preconnect" href="https://api.deepseek.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.deepseek.com" />
+
+    <style>
+      /* 首屏兜底：在 JS / three.js 就位之前，先用同色系渐变撑住画面，避免黑屏闪烁 */
+      html {
+        background: #070912;
+      }
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(120% 85% at 50% 118%, #2a1b4d 0%, rgba(42, 27, 77, 0) 62%),
+          radial-gradient(85% 55% at 76% 74%, rgba(255, 154, 84, 0.34) 0%, rgba(255, 154, 84, 0) 58%),
+          linear-gradient(180deg, #06080f 0%, #0d1533 42%, #241f4c 68%, #4c3358 86%, #7e4f4c 100%);
+        transition: opacity 0.9s ease;
+      }
+      html.scene-ready #boot {
+        opacity: 0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="boot" aria-hidden="true"></div>
+    <div id="root"></div>
+    <noscript>
+      <p style="color: #eef2ff; font-family: system-ui; padding: 24px">
+        这个页面需要 JavaScript 才能运行：它要在你的浏览器里调用 DeepSeek 接口查询余额。
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

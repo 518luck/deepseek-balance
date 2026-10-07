@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Worker 名称 = Cloudflare 上的项目名，部署后地址为 https://<name>.<subdomain>.workers.dev
+  "name": "deepseek-balance",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-07",
+  "assets": {
+    // 前端构建产物（Vite build 输出）
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // 单页应用：未命中静态文件时回退到 index.html
+    "not_found_handling": "single-page-application",
+    // 只有 /api/* 先进入 Worker，其余请求直接由静态资源层响应（零冷启动开销）
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true
+  }
+}
