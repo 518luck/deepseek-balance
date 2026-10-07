@@ -82,8 +82,11 @@ pnpm cf:dev      # 构建 + 本地跑真实的 Worker 环境
 ```bash
 npx wrangler login      # 浏览器里完成授权（只需一次）
 npx wrangler whoami     # 确认登的是哪个账号（多账号时 wrangler 会追问 account）
-pnpm deploy             # 构建 + 部署，默认地址 https://deepseek-balance.<你的子域>.workers.dev
+pnpm run deploy         # 构建 + 部署，默认地址 https://deepseek-balance.<你的子域>.workers.dev
 ```
+
+> ⚠️ 部署请用 `pnpm run deploy`，不要写 `pnpm deploy` —— 后者会命中 pnpm 自带的
+> workspace 部署命令（作用是往目录里拷包），跟本站无关。用 npm 的话 `npm run deploy` 正常。
 
 部署完成后建议自查（把 `<url>` 换成实际地址）：
 
