@@ -27,6 +27,7 @@ export type ErrorKind =
   | 'aborted'
   | 'malformed'
   | 'proxy_failed'
+  | 'proxy_missing'
   | 'unknown'
 
 export interface QuerySuccess {
@@ -119,6 +120,7 @@ const ERROR_KINDS: readonly ErrorKind[] = [
   'aborted',
   'malformed',
   'proxy_failed',
+  'proxy_missing',
   'unknown',
 ]
 
@@ -217,10 +219,14 @@ export async function queryBalance(key: string, options: QueryOptions = {}): Pro
         return { ok: true, via, latencyMs, fetchedAt: Date.now(), data: envelope.data }
       }
       const status = typeof envelope.status === 'number' ? envelope.status : response.status
-      // 代理会带上自己判断好的错误类型，优先采信；否则按状态码推断
-      const kind: ErrorKind = isErrorKind(envelope.error?.kind)
-        ? envelope.error.kind
-        : statusToKind(status || response.status || 0)
+      // 404 = 这个站根本没部署 /api/balance（例如只把 dist 拖到网页端做纯静态部署）
+      const kind: ErrorKind =
+        response.status === 404
+          ? 'proxy_missing'
+          : // 代理会带上自己判断好的错误类型，优先采信；否则按状态码推断
+            isErrorKind(envelope.error?.kind)
+            ? envelope.error.kind
+            : statusToKind(status || response.status || 0)
       return failure({
         via,
         latencyMs,

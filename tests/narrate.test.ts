@@ -150,6 +150,7 @@ describe('narrateFailure', () => {
     'aborted',
     'malformed',
     'proxy_failed',
+    'proxy_missing',
     'unknown',
   ]
 
@@ -192,6 +193,16 @@ describe('narrateFailure', () => {
       const actions = plan.blocks.find((block) => block.kind === 'actions')
       expect(actions?.kind, kind).toBe('actions')
     }
+  })
+
+  it('纯静态部署（没有代理）时，引导用户回到浏览器直连', () => {
+    const plan = narrateFailure(failureOf('proxy_missing', { status: 404 }))
+    const text = allText(plan)
+    expect(text).toContain('没有部署边缘代理')
+    expect(text).toContain('浏览器直连')
+    const actions = plan.blocks.find((block) => block.kind === 'actions')
+    if (actions?.kind !== 'actions') throw new Error('缺少操作按钮')
+    expect(actions.actions.map((action) => action.id)).toEqual(['retry-direct'])
   })
 
   it('空白输入不触发网络请求，只提示怎么拿密钥', () => {

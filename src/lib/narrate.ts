@@ -302,6 +302,14 @@ const FAILURE_COPY: Record<ErrorKind, { tone: Tone; headline: (f: QueryFailure) 
     headline: () => '本站的边缘代理没能完成这次转发。',
     hints: ['可能代理被网络策略拦截，或上游返回了异常。建议改回「浏览器直连」再试一次。'],
   },
+  proxy_missing: {
+    tone: 'warn',
+    headline: () => '这个站点没有部署边缘代理，所以「代理重试」这条路走不通。',
+    hints: [
+      '本站是纯静态部署，少了一个 /api/balance 边缘函数（浏览器直连不受影响，它本来就不需要服务器）。',
+      '下面点「再查一次（浏览器直连）」即可 —— 如果直连被网络拦截，那就得换网络或关掉拦截插件。',
+    ],
+  },
   unknown: {
     tone: 'error',
     headline: (f) => `查询失败了，但原因不明${f.status ? `（接口返回 ${f.status}）` : ''}。`,
@@ -319,6 +327,7 @@ const FAILURE_ACTIONS: Partial<Record<ErrorKind, TerminalAction[]>> = {
   timeout: ['retry-direct'],
   malformed: ['retry-direct'],
   proxy_failed: ['retry-direct', 'retry-proxy'],
+  proxy_missing: ['retry-direct'],
   unknown: ['retry-direct'],
 }
 

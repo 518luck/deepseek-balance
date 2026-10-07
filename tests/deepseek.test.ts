@@ -78,7 +78,8 @@ describe('queryBalance 直连', () => {
 
     const [url, init] = spy.mock.calls[0]!
     expect(url).toBe(BALANCE_ENDPOINT)
-    expect((init?.headers as Record<string, string>).Authorization).toBe('Bearer sk-1234567890abcdefghij')
+    const headers = new Headers(init?.headers)
+    expect(headers.get('Authorization')).toBe('Bearer sk-1234567890abcdefghij')
   })
 
   it('401 归为密钥无效，并带出官方原话', async () => {
@@ -191,6 +192,14 @@ describe('queryBalance 走本站代理', () => {
     const outcome = await queryBalance('sk-1234567890abcdefghij', { via: 'proxy' })
     if (outcome.ok) throw new Error('应当失败')
     expect(outcome.kind).toBe('proxy_failed')
+  })
+
+  it('站点没部署代理时（404）→ proxy_missing，而不是含糊的「原因不明」', async () => {
+    mockFetch(() => new Response('<html>404</html>', { status: 404, headers: { 'content-type': 'text/html' } }))
+    const outcome = await queryBalance('sk-1234567890abcdefghij', { via: 'proxy' })
+    if (outcome.ok) throw new Error('应当失败')
+    expect(outcome.kind).toBe('proxy_missing')
+    expect(outcome.status).toBe(404)
   })
 
   it('代理网络层失败（模拟被拦截）→ proxy_failed', async () => {
