@@ -63,11 +63,12 @@ export function percentOf(part: number, total: number): number {
   return Math.min(100, Math.max(0, (part / total) * 100))
 }
 
+const pad2 = (value: number): string => String(value).padStart(2, '0')
+
 /** 2026-10-07 13:26 */
 export function formatLocalTime(timestamp: number): string {
   const d = new Date(timestamp)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`
 }
 
 /** 0.28 秒 / 1.4 秒 */

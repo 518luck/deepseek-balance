@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -41,26 +42,40 @@ export function Terminal() {
 
   const { items, phase, status, summary, busy, submit, present, runAction, skip, clear } = session
 
-  /* 内容增长时自动贴底；用户手动往上翻时就不打扰 */
+  /* 内容签名：新增一行、又打出几个字、状态行出现或消失，都会让它变化 */
+  const contentSignature = useMemo(() => {
+    const last = items[items.length - 1]
+    const progress = last ? (last.type === 'text' ? last.revealed : 1) : 0
+    return `${items.length}:${progress}:${status ?? ''}`
+  }, [items, status])
+  const lastSignatureRef = useRef('')
+
+  /* 有新内容就贴回底部；用户手动往上翻时就不打扰 */
   useEffect(() => {
     const body = bodyRef.current
-    if (!body || !pinnedRef.current) return
+    const advanced = lastSignatureRef.current !== contentSignature
+    lastSignatureRef.current = contentSignature
+    // advanced 为 false 只会出现在 StrictMode 重复执行 effect 时，此时没必要再写一次滚动位置
+    if (!body || !pinnedRef.current || !advanced) return
     body.scrollTop = body.scrollHeight
-  }, [items, status])
+  }, [contentSignature])
 
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
 
-  /* 连接阶段显示一个走动的耗时，避免“卡住了”的错觉 */
+  /* 连接阶段显示一个走动的耗时，避免“卡住了”的错觉。
+     effect 体内不同步 setState（会触发级联渲染），首帧交给 0ms 定时器对齐。 */
   useEffect(() => {
-    if (phase !== 'connecting') {
-      setElapsed(0)
-      return
-    }
+    if (phase !== 'connecting') return
     const startedAt = Date.now()
-    const timer = window.setInterval(() => setElapsed(Date.now() - startedAt), 100)
-    return () => window.clearInterval(timer)
+    const tick = () => setElapsed(Date.now() - startedAt)
+    const timer = window.setInterval(tick, 100)
+    const align = window.setTimeout(tick, 0)
+    return () => {
+      window.clearInterval(timer)
+      window.clearTimeout(align)
+    }
   }, [phase])
 
   /* ⌘/Ctrl + K 清屏：终端里的肌肉记忆 */

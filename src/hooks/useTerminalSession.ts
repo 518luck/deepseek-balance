@@ -196,7 +196,6 @@ export function useTerminalSession() {
       abortRef.current?.abort()
       const controller = new AbortController()
       abortRef.current = controller
-      itemsRef.current = itemsRef.current // 保持引用语义，便于阅读
 
       setStatus(CONNECTING_TEXT)
       setPhase('connecting')

@@ -1,0 +1,39 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "unicorn", "oxc", "import", "promise"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "ignorePatterns": ["dist", "node_modules", ".wrangler", "coverage"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    // 站点承诺「密钥不落盘、不记录」，所以源码里不允许出现任何 console 输出
+    "no-console": "error",
+    // 走自动 JSX 运行时（jsx: react-jsx），不需要 React 变量在作用域里
+    "react/react-in-jsx-scope": "off",
+    // 打字机的逐字停顿本来就是串行等待，并行化会毁掉这个效果
+    "no-await-in-loop": "off"
+  },
+  "overrides": [
+    {
+      "files": ["worker/**/*.ts"],
+      "env": { "browser": false }
+    },
+    {
+      "files": ["tests/**/*.ts", "vite.config.ts"],
+      "env": { "node": true }
+    },
+    {
+      "files": ["src/main.tsx"],
+      // 入口里 import './styles/global.css' 是 Vite 的标准写法，属于有意的副作用导入
+      "rules": { "import/no-unassigned-import": "off" }
+    }
+  ]
+}

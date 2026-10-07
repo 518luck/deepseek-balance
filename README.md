@@ -68,14 +68,21 @@ pnpm dev                        # 终端 B：前端，/api/* 会转发到 8787
 # 然后访问 http://127.0.0.1:5173/?via=proxy 强制走代理路径
 ```
 
-## 测试与构建
+## 代码检查、测试与构建
 
 ```bash
-pnpm test        # Vitest
+pnpm lint        # oxlint 静态检查（24 个文件约 60ms）
 pnpm typecheck   # tsc -b
+pnpm test        # Vitest，58 个用例
 pnpm build       # 类型检查 + 产物构建到 dist/
 pnpm cf:dev      # 构建 + 本地跑真实的 Worker 环境
 ```
+
+静态检查用 **oxlint** 而不是 ESLint：ESLint 的 TypeScript 解析器（`typescript-eslint`）目前
+[不支持 TypeScript 7 的 API](https://github.com/typescript-eslint/typescript-eslint/issues/10940)，
+而本项目用的是 TS 7 + Vite 8；oxlint 自带 TS 解析，不依赖 TS 的 JS API，也不需要为它降级编译器。
+规则取舍写在 [.oxlintrc.json](.oxlintrc.json) 的注释里，其中 `no-console` 是硬约束：
+本站承诺「密钥不记录」，所以源码里不允许出现任何 console 输出。
 
 ## 部署到 Cloudflare
 
